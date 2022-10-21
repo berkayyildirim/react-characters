@@ -9,13 +9,17 @@ function App() {
   const [charactersArr, setCharactersArr] = useState([]);
 
   useEffect(() => {
+    fetchCharacters();
+  }, []);
+
+  const fetchCharacters = () => {
     axios
       .get("https://ih-crud-api.herokuapp.com/characters")
       .then((response) => {
         setCharactersArr(response.data);
       })
       .catch((e) => console.log("error getting characters from API", e));
-  }, []);
+  };
 
   return (
     <div className='App'>
@@ -24,7 +28,12 @@ function App() {
           path='/'
           element={<CharactersList characters={charactersArr} />}
         />
-        <Route path='/characters/:characterId' element={<CharacterDetails />} />
+        <Route
+          path='/characters/:characterId'
+          element={
+            <CharacterDetails callbackToFetchCharacters={fetchCharacters} />
+          }
+        />
       </Routes>
     </div>
   );
